@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+const ghVersionHeader = {
+  headers: { "Accept": "application/vnd.github.v3+json" }
+};
+
 class GithubApi extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +17,10 @@ class GithubApi extends Component {
   }
 
   componentDidMount() {
-    fetch(`https://api.github.com/users/${this.state.user}`)
+    fetch(
+      `https://api.github.com/users/${this.state.user}`,
+      ghVersionHeader
+    )
       .then(res => res.json())
       .then(({
         avatar_url,
@@ -24,15 +31,22 @@ class GithubApi extends Component {
         avatar_url,
         name,
         url,
-      }, this.retrieveCommits)
+      }, this.fetchEvents)
       )
       .catch(console.error);
   }
 
-  retrieveCommits() {
+  fetchEvents() {
     // fetch these only after initial user info response
     // this is a callback to the async setState following that request
     console.log("retrieve commits here...", this.state)
+    fetch(
+      `https://api.github.com/users/${this.state.user}/events`,
+      ghVersionHeader
+    )
+      .then(res => res.json())
+      .then(res => res.filter(event => event.type === "PushEvent"))
+      .then(console.log)
   }
 
   render() {
@@ -41,10 +55,13 @@ class GithubApi extends Component {
     return (
       <div>
         <h2>Name: {name}</h2>
-        <div>
-          Github API response received? <strong>{isLoaded ? "Yep!" : "Not yet!"}</strong>
+        <div id="avatar">
+          {
+            isLoaded
+              ? <img id="ghAvatar" src={avatar_url} alt="Github user avatar" />
+              : "Loading..."
+          }
         </div>
-        <img id="ghAvatar" src={avatar_url} alt="Github user avatar" />
       </div>
     );
   }
