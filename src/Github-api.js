@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Commits from './Commits';
-import EventSummary from './Event-Summary.js';
+import Profile from './Profile'
+import EventsParsing from './EventsParsing'
 import './Github-api.css';
 
 class GithubApi extends Component {
@@ -8,21 +8,10 @@ class GithubApi extends Component {
     super(props);
 
     this.state = {
-      isLoaded: false,
       isError: false,
       user: "benfletcher", // default GH user to query
-      name: "",
-      profileURL: null,
-      avatarURL: null,
-      commits: [],
-      eventCounts: {
-        push: 0,
-        pullRequest: 0,
-        watch: 0,
-        create: 0,
-        public: 0,
-      },
       eventResponse: null,
+      userResponse: null,
     };
 
     this.ghVersionHeader = {
@@ -47,19 +36,11 @@ class GithubApi extends Component {
         if (!response.ok) {
           throw new Error(response.status)
         }
-        return response;
+        return response.json();
       })
-      .then(res => res.json())
-      .then(({
-        avatar_url: avatarURL,
-        name,
-        html_url: profileURL,
-      }) => this.setState({
-        isLoaded: true,
+      .then(response => this.setState({
         isError: false,
-        avatarURL,
-        name,
-        profileURL,
+        userResponse: response,
       }, this.fetchEvents) // delay next fetch until after UI update
       )
       .catch(err => {
@@ -68,7 +49,6 @@ class GithubApi extends Component {
   }
 
   fetchEvents() {
-    // called after setState from initial user fetch
     fetch(
       `https://api.github.com/users/${this.state.user}/events`,
       this.ghVersionHeader
@@ -77,15 +57,10 @@ class GithubApi extends Component {
         if (!response.ok) {
           throw new Error(response.status)
         }
-        return response;
+        return response.json();
       })
-      .then(response => response.json())
-      .then(response => {
-        this.setState({ eventResponse: response });
-      })
-      .catch(err => {
-        this.setState({ isError: true });
-      });
+      .then(response => this.setState({ eventResponse: response }))
+      .catch(err => this.setState({ isError: true }));
   }
 
   handleChange(e) {
@@ -99,12 +74,9 @@ class GithubApi extends Component {
 
   render() {
     const {
-      isLoaded,
       isError,
-      avatarURL,
-      name,
       user,
-      profileURL,
+      userResponse,
       eventResponse,
     } = this.state;
 
@@ -116,24 +88,17 @@ class GithubApi extends Component {
             <input
               value={user}
               onChange={this.handleChange} />
-            <button type="submit" onClick={this.handleSubmit}>Submit</button>
+            <button type="submit" onClick={this.handleSubmit}>
+              Submit
+            </button>
           </fieldset>
         </form>
         {
           isError
             ? <h1>Sorry that username wasn't found on Github. Please try a different username.</h1>
             : <div>
-              <h2>Name: {name}</h2>
-              <a href={profileURL}>Link to Github Profile</a>
-              <div>
-                {
-                  isLoaded
-                    ? <img id="avatar" src={avatarURL} alt="Github user avatar" />
-                    : "Loading..."
-                }
-              </div>
-              <Commits>{eventResponse}</Commits>
-              <EventSummary>{eventResponse}</EventSummary>
+              <Profile userResponse={userResponse} />
+              <EventsParsing eventResponse={eventResponse} />
             </div>
         }
       </div>

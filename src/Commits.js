@@ -2,11 +2,7 @@ import React from 'react';
 import './Commits.css';
 import ghLogo from './GitHub-Mark-32px.png';
 
-const Commits = ({ children: eventResponse }) => {
-  if (!eventResponse) {
-    return null;
-  }
-
+const Commits = ({ eventResponse }) => {
   const commits = [];
 
   // Normalize data: unpack commits from pushes -- each push can have >1 commit
