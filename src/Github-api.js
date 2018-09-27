@@ -62,6 +62,7 @@ class GithubApi extends Component {
 
   render() {
     const { isLoaded, avatar_url, name, commits } = this.state;
+    const firstThreeCommits = commits.slice(0, 3);
 
     console.log(commits);
 
@@ -75,26 +76,28 @@ class GithubApi extends Component {
               : "Loading..."
           }
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>SHA</th>
-              <th>message</th>
-              <th>URL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              commits.map(({ sha, message, url }) => (
-                <tr key={sha}>
-                  <td>{sha}</td>
-                  <td>{message}</td>
-                  <td><a href={url}>Link to Github</a></td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+        <div id="commits">
+          <table>
+            <thead>
+              <tr>
+                <th>SHA</th>
+                <th>Message</th>
+                <th>URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                firstThreeCommits.map(({ sha, message, url }) => (
+                  <tr key={sha}>
+                    <td>{sha}</td>
+                    <td>{message}</td>
+                    <td><a href={url}>Link to Github</a></td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
