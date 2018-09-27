@@ -2,18 +2,7 @@ import React from 'react';
 import './Commits.css';
 import ghLogo from './GitHub-Mark-32px.png';
 
-const Commits = ({ eventResponse }) => {
-  const commits = [];
-
-  // Normalize data: unpack commits from pushes -- each push can have >1 commit
-  eventResponse
-    .filter(event => event.type === "PushEvent")
-    .map(pushes => pushes.payload.commits)
-    .forEach(commit =>
-      commit.forEach(details => commits.push(details))
-    );
-
-
+const Commits = ({ commits }) => {
   if (commits.length < 1) {
     return <p>This user has no recent commits in the event history.</p>
   }
