@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Commits from './Commits';
+import EventSummary from './Event-Summary.js';
 import './Github-api.css';
 
 class GithubApi extends Component {
@@ -10,10 +11,18 @@ class GithubApi extends Component {
       isLoaded: false,
       isError: false,
       user: "benfletcher", // default GH user to query
-      name: "loading...",
+      name: "",
       profileURL: null,
       avatarURL: null,
       commits: [],
+      eventCounts: {
+        push: 0,
+        pullRequest: 0,
+        watch: 0,
+        create: 0,
+        public: 0,
+      },
+      eventResponse: null,
     };
 
     this.ghVersionHeader = {
@@ -72,17 +81,7 @@ class GithubApi extends Component {
       })
       .then(response => response.json())
       .then(response => {
-        const commitDetails = [];
-
-        // Normalize data: unpack commits from pushes -- each push can have >1 commit
-        response
-          .filter(event => event.type === "PushEvent")
-          .map(pushes => pushes.payload.commits)
-          .forEach(commit =>
-            commit.forEach(details => commitDetails.push(details))
-          );
-
-        this.setState({ commits: commitDetails });
+        this.setState({ eventResponse: response });
       })
       .catch(err => {
         this.setState({ isError: true });
@@ -106,7 +105,7 @@ class GithubApi extends Component {
       name,
       user,
       profileURL,
-      commits,
+      eventResponse,
     } = this.state;
 
     return (
@@ -125,7 +124,7 @@ class GithubApi extends Component {
             ? <h1>Sorry that username wasn't found on Github. Please try a different username.</h1>
             : <div>
               <h2>Name: {name}</h2>
-              <a href={profileURL}>Github Profile</a>
+              <a href={profileURL}>Link to Github Profile</a>
               <div>
                 {
                   isLoaded
@@ -133,10 +132,10 @@ class GithubApi extends Component {
                     : "Loading..."
                 }
               </div>
-              <Commits>{commits}</Commits>
+              <Commits>{eventResponse}</Commits>
+              <EventSummary>{eventResponse}</EventSummary>
             </div>
         }
-
       </div>
     );
   }
