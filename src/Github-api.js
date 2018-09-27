@@ -13,6 +13,7 @@ class GithubApi extends Component {
       name: "loading...",
       isLoaded: false,
       avatar_url: null,
+      commits: [],
     };
   }
 
@@ -31,7 +32,7 @@ class GithubApi extends Component {
         avatar_url,
         name,
         url,
-      }, this.fetchEvents)
+      }, this.fetchEvents) // triggers immediate UI update followed by next fetch
       )
       .catch(console.error);
   }
@@ -39,14 +40,24 @@ class GithubApi extends Component {
   fetchEvents() {
     // fetch these only after initial user info response
     // this is a callback to the async setState following that request
-    console.log("retrieve commits here...", this.state)
     fetch(
       `https://api.github.com/users/${this.state.user}/events`,
       ghVersionHeader
     )
-      .then(res => res.json())
-      .then(res => res.filter(event => event.type === "PushEvent"))
-      .then(console.log)
+      .then(response => response.json())
+      .then(response => {
+        const commitDetails = [];
+
+        response
+          .filter(event => event.type === "PushEvent")
+          .map(pushes => pushes.payload.commits)
+          .forEach(commit =>
+            commit.forEach(commit => commitDetails.push(commit))
+          );
+
+        this.setState({ commits: commitDetails }, () => console.log(this.state));
+      })
+      .catch(console.error);
   }
 
   render() {
@@ -58,10 +69,23 @@ class GithubApi extends Component {
         <div id="avatar">
           {
             isLoaded
-              ? <img id="ghAvatar" src={avatar_url} alt="Github user avatar" />
+              ? <img id="avatar" src={avatar_url} alt="Github user avatar" />
               : "Loading..."
           }
         </div>
+        <table>
+          <thead>
+            <tr>
+              <th>SHA</th>
+              <th>message</th>
+              <th>URL</th>
+            </tr>
+          </thead>
+
+          {
+
+          }
+        </table>
       </div>
     );
   }
