@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import './Github-api.css';
+import ghLogo from './GitHub-Mark-32px.png';
 
 const ghVersionHeader = {
   headers: { "Accept": "application/vnd.github.v3+json" }
@@ -9,10 +11,11 @@ class GithubApi extends Component {
     super(props);
 
     this.state = {
+      isLoaded: false,
       user: "benfletcher", // default GH user to query
       name: "loading...",
-      isLoaded: false,
-      avatar_url: null,
+      profileURL: null,
+      avatarURL: null,
       commits: [],
     };
   }
@@ -24,22 +27,21 @@ class GithubApi extends Component {
     )
       .then(res => res.json())
       .then(({
-        avatar_url,
+        avatar_url: avatarURL,
         name,
-        url,
+        html_url: profileURL,
       }) => this.setState({
         isLoaded: true,
-        avatar_url,
+        avatarURL,
         name,
-        url,
-      }, this.fetchEvents) // triggers immediate UI update followed by next fetch
+        profileURL,
+      }, this.fetchEvents) // delay next fetch until after UI update
       )
       .catch(console.error);
   }
 
   fetchEvents() {
-    // fetch these only after initial user info response
-    // this is a callback to the async setState following that request
+    // called after setState from initial user fetch
     fetch(
       `https://api.github.com/users/${this.state.user}/events`,
       ghVersionHeader
@@ -61,18 +63,18 @@ class GithubApi extends Component {
   }
 
   render() {
-    const { isLoaded, avatar_url, name, commits } = this.state;
+    const { isLoaded, avatarURL, name, user, profileURL, commits } = this.state;
     const firstThreeCommits = commits.slice(0, 3);
-
-    console.log(commits);
 
     return (
       <div>
         <h2>Name: {name}</h2>
-        <div id="avatar">
+        <p>GH Username: {user}</p>
+        <a href={profileURL}>Github Profile</a>
+        <div>
           {
             isLoaded
-              ? <img id="avatar" src={avatar_url} alt="Github user avatar" />
+              ? <img id="avatar" src={avatarURL} alt="Github user avatar" />
               : "Loading..."
           }
         </div>
@@ -82,7 +84,7 @@ class GithubApi extends Component {
               <tr>
                 <th>SHA</th>
                 <th>Message</th>
-                <th>URL</th>
+                <th>Commit details</th>
               </tr>
             </thead>
             <tbody>
@@ -90,8 +92,10 @@ class GithubApi extends Component {
                 firstThreeCommits.map(({ sha, message, url }) => (
                   <tr key={sha}>
                     <td>{sha}</td>
-                    <td>{message}</td>
-                    <td><a href={url}>Link to Github</a></td>
+                    <td className="message">{message}</td>
+                    <td className="ghLink"><a href={url}>
+                      <img src={ghLogo} alt="Github logo" />
+                    </a></td>
                   </tr>
                 ))
               }
