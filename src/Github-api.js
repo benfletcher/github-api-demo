@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import Commits from './Commits';
 import './Github-api.css';
 
-const ghVersionHeader = {
-  headers: { "Accept": "application/vnd.github.v3+json" }
-};
-
 class GithubApi extends Component {
   constructor(props) {
     super(props);
@@ -18,12 +14,17 @@ class GithubApi extends Component {
       avatarURL: null,
       commits: [],
     };
+
+    this.ghVersionHeader = {
+      headers: { "Accept": "application/vnd.github.v3+json" }
+    };
+
   }
 
   componentDidMount() {
     fetch(
       `https://api.github.com/users/${this.state.user}`,
-      ghVersionHeader
+      this.ghVersionHeader
     )
       .then(res => res.json())
       .then(({
@@ -44,12 +45,13 @@ class GithubApi extends Component {
     // called after setState from initial user fetch
     fetch(
       `https://api.github.com/users/${this.state.user}/events`,
-      ghVersionHeader
+      this.ghVersionHeader
     )
       .then(response => response.json())
       .then(response => {
         const commitDetails = [];
 
+        // Normalize data: unpack commits from pushes -- each push can have >1 commit
         response
           .filter(event => event.type === "PushEvent")
           .map(pushes => pushes.payload.commits)
