@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import Commits from './Commits';
 import './Github-api.css';
-import ghLogo from './GitHub-Mark-32px.png';
 
 const ghVersionHeader = {
   headers: { "Accept": "application/vnd.github.v3+json" }
@@ -63,8 +63,14 @@ class GithubApi extends Component {
   }
 
   render() {
-    const { isLoaded, avatarURL, name, user, profileURL, commits } = this.state;
-    const firstThreeCommits = commits.slice(0, 3);
+    const {
+      isLoaded,
+      avatarURL,
+      name,
+      user,
+      profileURL,
+      commits,
+    } = this.state;
 
     return (
       <div>
@@ -78,30 +84,7 @@ class GithubApi extends Component {
               : "Loading..."
           }
         </div>
-        <div id="commits">
-          <table>
-            <thead>
-              <tr>
-                <th>SHA</th>
-                <th>Message</th>
-                <th>Commit details</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                firstThreeCommits.map(({ sha, message, url }) => (
-                  <tr key={sha}>
-                    <td>{sha}</td>
-                    <td className="message">{message}</td>
-                    <td className="ghLink"><a href={url}>
-                      <img src={ghLogo} alt="Github logo" />
-                    </a></td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div>
+        <Commits>{commits}</Commits>
       </div>
     );
   }

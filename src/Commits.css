@@ -1,0 +1,30 @@
+table {
+  font-family: monospace;
+  font-size: 1.2em;
+  width: 85%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+th {
+  padding: 15px;
+  font-size: 1.3em;
+}
+
+td {
+  padding: 10px;
+  border: 1px solid #807d7d;
+}
+
+.message {
+  text-align: left;
+}
+
+a {
+  text-decoration: none;
+}
+
+.ghLink:hover {
+  background-color: #c6cace;
+  filter: invert(1);
+}
