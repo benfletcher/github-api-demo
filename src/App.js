@@ -8,11 +8,10 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">Github API v3 Demo</h1>
-          <h3>Ben Fletcher</h3>
+          <p className="App-intro">
+            Summary of Github user profile and recent activity.
+          </p>
         </header>
-        <p className="App-intro">
-          The Github API allows for certain data retrieval without authentication.
-        </p>
         <GithubApi />
       </div>
     );
