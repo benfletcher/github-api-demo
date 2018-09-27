@@ -52,16 +52,18 @@ class GithubApi extends Component {
           .filter(event => event.type === "PushEvent")
           .map(pushes => pushes.payload.commits)
           .forEach(commit =>
-            commit.forEach(commit => commitDetails.push(commit))
+            commit.forEach(details => commitDetails.push(details))
           );
 
-        this.setState({ commits: commitDetails }, () => console.log(this.state));
+        this.setState({ commits: commitDetails });
       })
       .catch(console.error);
   }
 
   render() {
-    const { isLoaded, avatar_url, name } = this.state;
+    const { isLoaded, avatar_url, name, commits } = this.state;
+
+    console.log(commits);
 
     return (
       <div>
@@ -81,10 +83,17 @@ class GithubApi extends Component {
               <th>URL</th>
             </tr>
           </thead>
-
-          {
-
-          }
+          <tbody>
+            {
+              commits.map(({ sha, message, url }) => (
+                <tr key={sha}>
+                  <td>{sha}</td>
+                  <td>{message}</td>
+                  <td><a href={url}>Link to Github</a></td>
+                </tr>
+              ))
+            }
+          </tbody>
         </table>
       </div>
     );
