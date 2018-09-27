@@ -2,7 +2,7 @@ import React from 'react';
 import Commits from './Commits';
 import EventSummary from './EventSummary';
 
-function EventsParsing({ eventResponse }) {
+function EventParsing({ eventResponse }) {
   if (!eventResponse) {
     return null;
   }
@@ -40,4 +40,4 @@ function EventsParsing({ eventResponse }) {
   );
 }
 
-export default EventsParsing;
+export default EventParsing;

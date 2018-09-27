@@ -1,8 +1,6 @@
 import React from 'react';
 
 function EventSummary({ eventCounts }) {
-  console.log('evtsummary', eventCounts);
-
   const {
     push,
     pullRequest,

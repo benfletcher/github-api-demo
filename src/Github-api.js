@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Profile from './Profile'
-import EventsParsing from './EventsParsing'
+import EventParsing from './EventParsing'
 import './Github-api.css';
 
 class GithubApi extends Component {
@@ -98,7 +98,7 @@ class GithubApi extends Component {
             ? <h1>Sorry that username wasn't found on Github. Please try a different username.</h1>
             : <div>
               <Profile userResponse={userResponse} />
-              <EventsParsing eventResponse={eventResponse} />
+              <EventParsing eventResponse={eventResponse} />
             </div>
         }
       </div>
