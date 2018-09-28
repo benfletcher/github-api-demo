@@ -1,0 +1,19 @@
+{
+    "extends": "airbnb",
+    "rules": {
+        "react/jsx-filename-extension": "off",
+        "implicit-arrow-linebreak": "off",
+        "react/prop-types": "off"
+    },
+    "overrides": [
+        {
+            "files": [
+                "*.test.js"
+            ],
+            "globals": {
+                "it": true,
+                "document": true
+            }
+        }
+    ]
+}

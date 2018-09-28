@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Profile from '../Profile'
-import EventParsing from './EventParsing'
+import Profile from '../Profile';
+import EventParsing from './EventParsing';
 import './Github-api.css';
 
 class GithubApi extends Component {
@@ -9,13 +9,13 @@ class GithubApi extends Component {
 
     this.state = {
       isError: false,
-      user: "benfletcher", // default GH user to query
+      user: 'benfletcher', // default GH user to query
       eventResponse: null,
       userResponse: null,
     };
 
     this.ghVersionHeader = {
-      headers: { "Accept": "application/vnd.github.v3+json" },
+      headers: { Accept: 'application/vnd.github.v3+json' },
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -30,20 +30,20 @@ class GithubApi extends Component {
   fetchUser() {
     fetch(
       `https://api.github.com/users/${this.state.user}`,
-      this.ghVersionHeader
+      this.ghVersionHeader,
     )
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error(response.status)
+          throw new Error(response.status);
         }
         return response.json();
       })
       .then(response => this.setState({
         isError: false,
         userResponse: response,
-      }, this.fetchEvents) // delay next fetch until after UI update
+      }, this.fetchEvents), // delay next fetch until after UI update
       )
-      .catch(err => {
+      .catch((err) => {
         this.setState({ isError: true });
       });
   }
@@ -51,11 +51,11 @@ class GithubApi extends Component {
   fetchEvents() {
     fetch(
       `https://api.github.com/users/${this.state.user}/events`,
-      this.ghVersionHeader
+      this.ghVersionHeader,
     )
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error(response.status)
+          throw new Error(response.status);
         }
         return response.json();
       })
@@ -87,7 +87,8 @@ class GithubApi extends Component {
             <legend>Github Username</legend>
             <input
               value={user}
-              onChange={this.handleChange} />
+              onChange={this.handleChange}
+            />
             <button type="submit" onClick={this.handleSubmit}>
               Submit
             </button>
@@ -96,10 +97,12 @@ class GithubApi extends Component {
         {
           isError
             ? <h1>Sorry that username wasn't found on Github. Please try a different username.</h1>
-            : <div>
+            : (
+<div>
               <Profile userResponse={userResponse} />
               <EventParsing eventResponse={eventResponse} />
             </div>
+)
         }
       </div>
     );
