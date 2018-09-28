@@ -9,6 +9,7 @@ const App = () => (
       <p className="App-intro">
         Summary of Github user profile and recent activity.
       </p>
+      <a id="repo" href="https://github.com/benfletcher/github-api-demo">Link to Repo</a>
     </header>
     <GithubApi />
   </div>
