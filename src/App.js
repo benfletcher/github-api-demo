@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import GithubApi from './Github-api';
+import GithubApi from './UserProfile/Github-api';
 
 class App extends Component {
   render() {

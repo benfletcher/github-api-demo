@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Commits from "./Commits";
-import EventSummary from './EventSummary';
+import Commits from "./UserProfile/Commits";
+import EventSummary from './UserProfile/EventSummary';
 
 it('Commits table renders without crashing', () => {
   const div = document.createElement('div');
