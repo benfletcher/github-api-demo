@@ -4,7 +4,7 @@ import ghLogo from './GitHub-Mark-32px.png';
 
 const Commits = ({ commits }) => {
   if (commits.length < 1) {
-    return <p>This user has no recent commits in the event history.</p>
+    return <p>This user has no recent commits in the event history.</p>;
   }
 
   const firstThreeCommits = commits.slice(0, 3);
@@ -25,9 +25,12 @@ const Commits = ({ commits }) => {
               <tr key={sha}>
                 <td>{sha}</td>
                 <td className="message">{message}</td>
-                <td className="ghLink"><a href={url}>
-                  <img src={ghLogo} alt="Github logo" />
-                </a></td>
+                <td className="ghLink">
+                  <a href={url}>
+                    <img src={ghLogo} alt="Github logo" />
+                  </a>
+
+                </td>
               </tr>
             ))
           }

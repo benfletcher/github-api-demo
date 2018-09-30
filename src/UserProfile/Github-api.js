@@ -28,8 +28,9 @@ class GithubApi extends Component {
 
   // called on mount & username change
   fetchUser() {
+    const { user } = this.state;
     fetch(
-      `https://api.github.com/users/${this.state.user}`,
+      `https://api.github.com/users/${user}`,
       this.ghVersionHeader,
     )
       .then((response) => {
@@ -41,16 +42,16 @@ class GithubApi extends Component {
       .then(response => this.setState({
         isError: false,
         userResponse: response,
-      }, this.fetchEvents), // delay next fetch until after UI update
-      )
-      .catch((err) => {
+      }, this.fetchEvents)) // delay next fetch until after UI update)
+      .catch(() => {
         this.setState({ isError: true });
       });
   }
 
   fetchEvents() {
+    const { user } = this.state;
     fetch(
-      `https://api.github.com/users/${this.state.user}/events`,
+      `https://api.github.com/users/${user}/events`,
       this.ghVersionHeader,
     )
       .then((response) => {
@@ -60,7 +61,7 @@ class GithubApi extends Component {
         return response.json();
       })
       .then(response => this.setState({ eventResponse: response }))
-      .catch(err => this.setState({ isError: true }));
+      .catch(() => this.setState({ isError: true }));
   }
 
   handleChange(e) {
@@ -96,13 +97,13 @@ class GithubApi extends Component {
         </form>
         {
           isError
-            ? <h1>Sorry that username wasn't found on Github. Please try a different username.</h1>
+            ? <h1>Sorry that username was not found on Github. Please try a different username.</h1>
             : (
-<div>
-              <Profile userResponse={userResponse} />
-              <EventParsing eventResponse={eventResponse} />
-            </div>
-)
+              <div>
+                <Profile userResponse={userResponse} />
+                <EventParsing eventResponse={eventResponse} />
+              </div>
+            )
         }
       </div>
     );
